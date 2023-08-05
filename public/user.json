@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Alice",
+        "mark": 95,
+        "role": "Student"
+    },
+    {
+        "name": "Bui Hong Son",
+        "mark": 80,
+        "role": "Parent"
+    },
+    {
+        "name": "Eve",
+        "mark": 70,
+        "role": "Student"
+    },
+    {
+        "name": "Grace",
+        "mark": 88,
+        "role": "Teacher"
+    }
+]
