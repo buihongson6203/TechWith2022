@@ -1,0 +1,141 @@
+.container-register {
+    width: 100%;
+    height: 100vh;
+    padding: 37px 27px;
+    box-shadow: 18px 18px 36px 0px rgba(211, 209, 216, 0.25);
+  
+    .arrow {
+      margin-bottom: 50px;
+      width: 40px;
+      padding: 11px 16px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 20px 30px 0px rgba(211, 209, 216, 0.25);
+    }
+  
+    .login {
+      color: #000;
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 31px;
+      text-align: center;
+    }
+  
+    .input-login {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 29px;
+      position: relative;
+  
+      .title {
+        color: #9796A1;
+        font-size: 16px;
+        font-weight: 400;
+        padding-bottom: 12px;
+      }
+  
+      .fa-eye {
+        position: absolute;
+        top: 55px;
+        right: 30px;
+      }
+  
+      .input {
+        border-radius: 10px;
+        border: 1px solid #EEE;
+        background: #FFF;
+        box-shadow: 15px 20px 45px 0px rgba(233, 233, 233, 0.25);
+        padding: 22px 98px 26px 20px;
+        color: var(--c-4-c-4-c-4, #C4C4C4);
+        font-size: 17px;
+        font-weight: 400;
+      }
+  
+    }
+  
+    .forgot-password {
+      color: #FE724C;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 400;
+      margin-bottom: 32px;
+    }
+  
+    .btn-login-wrapper {
+      padding: 0 65px;
+  
+      .btn-login {
+        border-radius: 28px;
+        background: var(--primary-color, #FE724C);
+        box-shadow: 0px 10px 40px 0px rgba(122, 129, 190, 0.16);
+        padding: 25px 75px;
+        color: #FFF;
+        font-size: 15px;
+        font-weight: 600;
+        border: 0;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  
+    .reminder {
+      padding-top: 32px;
+      color: #5B5B5E;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 400;
+      margin-bottom: 61px;
+    }
+  
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 55px;
+      margin-bottom: 23px;
+      justify-content: space-around;
+  
+      button {
+        border-radius: 27px;
+        background: #FFF;
+        box-shadow: 17px 17px 35px 0px rgba(211, 209, 216, 0.25);
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 13px 12px;
+        border: 0;
+  
+        div {
+          color: #000;
+          font-size: 13px;
+          font-weight: 400;
+        }
+      }
+    }
+  
+    .sign-in {
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      margin-bottom: 18px;
+      justify-content: center;
+  
+      .thanh-ngang {
+        width: 89px;
+        height: 1px;
+        background: rgba(179, 179, 179, 0.50);
+  
+  
+      }
+  
+      .instruct {
+        color: #5B5B5E;
+        font-size: 16px;
+        font-weight: 500;
+      }
+    }
+  
+    .return {
+      color: #FE724C;
+    }
+  }

@@ -1,0 +1,35 @@
+.header{
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .09);
+    display: flex;
+    height: auto;
+    justify-content: space-between;
+    /* left: 0; */
+    padding: 25px 40px 25px 50px;
+    /* position: fixed;
+    top: 0; */
+    width: 100%;
+    .fa-bars {
+      display: none;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2d2e32;
+    }
+
+    .link {
+      display: flex;
+      list-style: none;
+      font-size: 17px;
+      color: #2d2e32;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .23s;
+      gap:20px;
+
+    }
+
+  }
