@@ -7,6 +7,7 @@ class Teacher extends Component {
         super(props);
         this.state = {
             students: [],
+            revclass: [],
         }
     }
     componentDidMount = () => {
@@ -27,6 +28,21 @@ class Teacher extends Component {
                 let students = response.data.records;
                 console.log(students)
                 this.setState({ students: students });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                this.setState({ loading: false });
+            })
+        axios.get('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Review%20Class?maxRecords=3&view=Grid%20view', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log('Data fetched successfully:', response.data.records);
+                let revclass = response.data.records;
+                console.log(revclass)
+                this.setState({ revclass: revclass });
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -128,13 +144,15 @@ class Teacher extends Component {
                         <h4>Resvision class</h4>
                         <p>Student list</p>
                         <ol>
-                            <li>Nguyen Hoang Nam</li>
-                            <li>Nguyen Hoang A</li>
+                            {this.state.revclass.map((revclass, index) => (
+                                    <li>{revclass.fields.Name}</li>
+                            ))}
                         </ol>
                         <p>Schedule:</p>
                         <ol>
-                            <li>2022-08-10 08:00:00</li>
-                            <li>2022-08-11 08:00:00</li>
+                            {this.state.revclass.map((revclass, index) => (
+                                    <li>{revclass.fields.Schedule}</li>
+                            ))}
                         </ol>
                         <p>Add next Schedule</p>
                         <input className="form-control" type="date" />
