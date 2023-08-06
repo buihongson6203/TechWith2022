@@ -1,28 +1,45 @@
 import React, { Component } from "react";
 import '../base.css';
 import './teacher.css';
-
+import axios from 'axios';
 class Teacher extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          name:[],
-          math:[],
-          physics:[],
-          chemist:[],
-          progress:[],
-          parents:[],
-          teacher:[],
+            students: [],
         }
-      }
-      componentDidMount = () => {
+    }
+    componentDidMount = () => {
         let token = localStorage.getItem("token");
-        if(!token){
-            localStorage.setItem("token","patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed");
+        if (!token) {
+            localStorage.setItem("token", "patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed");
             token = localStorage.getItem("token");
         }
         console.log(token);
-      }
+        //call api axios
+        axios.get('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students?maxRecords=3&view=student', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log('Data fetched successfully:', response.data.records);
+                let students = response.data.records;
+                console.log(students)
+                this.setState({ students: students });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                this.setState({ loading: false });
+            })
+    }
+    componentDidUpdate = (prevProps, prevState) => {
+        console.log('previous state');
+        console.log(prevState);
+        console.log('next state');
+        console.log(this.state);
+    }
+
     render() {
         return (
             <div className="container py-4">
@@ -48,30 +65,24 @@ class Teacher extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Nguyen Hoang Nam</td>
-                                    <td>10</td>
-                                    <td>7</td>
-                                    <td>6</td>
-                                    <td>
-                                        <button className="btn btn-primary"><i className="fa-solid fa-square-pen"></i></button>
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-danger"><i className="fa-solid fa-trash-can"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Nguyen Hoang Anh</td>
-                                    <td>10</td>
-                                    <td>10</td>
-                                    <td>10</td>
-                                    <td>
-                                        <button className="btn btn-primary"><i className="fa-solid fa-square-pen"></i></button>
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-danger"><i className="fa-solid fa-trash-can"></i></button>
-                                    </td>
-                                </tr>
+                                {this.state.students.map((students, index) => (
+                                    <tr key={index}>
+                                        <td>{students.fields.Name}</td>
+                                        <td>{students.fields.math}</td>
+                                        <td>{students.fields.physic}</td>
+                                        <td>{students.fields.chemistry}</td>
+                                        <td>
+                                            <button className="btn btn-primary">
+                                                <i className="fa-solid fa-square-pen"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button className="btn btn-danger">
+                                                <i className="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                         <div className="row">
@@ -97,26 +108,21 @@ class Teacher extends Component {
                     </div>
                     <div className="col-6">
                         <h4 className="">Academic Progress</h4>
-                        <div>
-                            <span>Nguyen Van A</span>
-                            <div className="progress">
-                                <div className="progress-bar" role="progressbar" style={{ width: '60%' }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">60%</div>
+                        {this.state.students.map((student, index) => (
+                            <div key={index}>
+                                <h4>{student.fields.Name}</h4>
+                                <div className="progress">
+                                    <div
+                                        className="progress-bar"
+                                        role="progressbar"
+                                        style={{ width: `${student.fields.progress}%` }}
+                                        aria-valuenow={student.fields.progress}
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                    >{student.fields.progress}%</div>
+                                </div>
                             </div>
-                            <div className="my-1 d-flex justify-content-between">
-                                <button className="btn btn-primary"><i className="fa-solid fa-arrow-left"></i></button>
-                                <button className="btn btn-primary"><i className="fa-solid fa-arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div>
-                            <span>Nguyen Van A</span>
-                            <div className="progress">
-                                <div className="progress-bar" role="progressbar" style={{ width: '60%' }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">60%</div>
-                            </div>
-                            <div className="my-1 d-flex justify-content-between">
-                                <button className="btn btn-primary"><i className="fa-solid fa-arrow-left"></i></button>
-                                <button className="btn btn-primary"><i className="fa-solid fa-arrow-right"></i></button>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                     <div className="col-6 mt-4">
                         <h4>Resvision class</h4>
