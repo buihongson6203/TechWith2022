@@ -8,6 +8,7 @@ class Teacher extends Component {
         this.state = {
             students: [],
             revclass: [],
+            feedback: [],
         }
     }
     componentDidMount = () => {
@@ -16,8 +17,8 @@ class Teacher extends Component {
             localStorage.setItem("token", "patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed");
             token = localStorage.getItem("token");
         }
-        console.log(token);
-        //call api axios
+
+        //CALL AXIOS TO TABLES
         axios.get('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students?maxRecords=3&view=student', {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -48,13 +49,96 @@ class Teacher extends Component {
                 console.error('Error fetching data:', error);
                 this.setState({ loading: false });
             })
+        axios.get('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Feedback?maxRecords=3&view=Grid%20view', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log('Data fetched successfully:', response.data.records);
+                let feedback = response.data.records;
+                console.log(feedback)
+                this.setState({ feedback: feedback });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                this.setState({ loading: false });
+            })
     }
-    componentDidUpdate = (prevProps, prevState) => {
-        console.log('previous state');
-        console.log(prevState);
-        console.log('next state');
-        console.log(this.state);
-    }
+    // componentDidUpdate = (prevProps, prevState) => {
+    //     console.log('previous state');
+    //     console.log(prevState);
+    //     console.log('next state');
+    //     console.log(this.state);
+    // }
+
+
+    //ADD STUDENT
+    handleAddStudent = () => {
+        const name = document.getElementById("nameInput").value;
+        const math = parseInt(document.getElementById("mathInput").value);
+        const physic = parseInt(document.getElementById("physicInput").value);
+        const chemistry = parseInt(document.getElementById("chemistryInput").value);
+        const progress = parseInt(document.getElementById("progressInput").value);
+        fetch('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
+            },
+            body: JSON.stringify({
+                fields: {
+                    Name: name,
+                    math: math,
+                    physic: physic,
+                    chemistry: chemistry,
+                    progress: progress,
+                    teacher: 'Ngô Vĩnh Toàn'
+                }
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.setState(prevState => ({
+                    students: [...prevState.students, data]
+                }));
+                this.clearForm();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
+    //DELETE STUDENTS
+    handleDeleteStudent = (studentId) => {
+        fetch(`https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students/${studentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    this.setState(prevState => ({
+                        students: prevState.students.filter(student => student.id !== studentId)
+                    }));
+                } else {
+                    console.error('Error:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
+    //CLEAR FORM AFTER ADD STUDENT
+    clearForm = () => {
+        document.getElementById("nameInput").value = "";
+        document.getElementById("mathInput").value = "";
+        document.getElementById("physicInput").value = "";
+        document.getElementById("chemistryInput").value = "";
+        document.getElementById("progressInput").value = "";
+    };
 
     render() {
         return (
@@ -94,7 +178,7 @@ class Teacher extends Component {
                                         </td>
                                         <td>
                                             <button className="btn btn-danger">
-                                                <i className="fa-solid fa-trash-can"></i>
+                                                <i className="fa-solid fa-trash-can" onClick={() => this.handleDeleteStudent(students.id)}></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -103,22 +187,24 @@ class Teacher extends Component {
                         </table>
                         <div className="row">
                             <div className="col-2">
-                                <input className="form-control" type="text" placeholder="Name" />
+                                <input id="nameInput" className="form-control" type="text" placeholder="Name" />
                             </div>
                             <div className="col-2">
-                                <input className="form-control" type="number" placeholder="Mark" />
+                                <input id="mathInput" className="form-control" type="number" placeholder="Mark" />
                             </div>
                             <div className="col-2">
-                                <input className="form-control" type="number" placeholder="Mark" />
+                                <input id="physicInput" className="form-control" type="number" placeholder="Mark" />
                             </div>
                             <div className="col-2">
-                                <input className="form-control" type="number" placeholder="Mark" />
+                                <input id="chemistryInput" className="form-control" type="number" placeholder="Mark" />
                             </div>
                             <div className="col-2">
-                                <input className="form-control" type="number" placeholder="Progress" />
+                                <input id="progressInput" className="form-control" type="number" placeholder="Progress" />
                             </div>
                             <div className="col-2">
-                                <button className="btn btn-warning text-white"><i className="fa-solid fa-user-plus"></i></button>
+                                <button className="btn btn-warning text-white" onClick={this.handleAddStudent}>
+                                    <i className="fa-solid fa-user-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -142,16 +228,17 @@ class Teacher extends Component {
                     </div>
                     <div className="col-6 mt-4">
                         <h4>Resvision class</h4>
-                        <p>Student list</p>
+                        <p>Student list:</p>
                         <ol>
                             {this.state.revclass.map((revclass, index) => (
-                                    <li>{revclass.fields.Name}</li>
+                                <li key={index}>{revclass.fields.Name}</li>
                             ))}
                         </ol>
+
                         <p>Schedule:</p>
                         <ol>
                             {this.state.revclass.map((revclass, index) => (
-                                    <li>{revclass.fields.Schedule}</li>
+                                <li key={index}>{revclass.fields.Schedule}</li>
                             ))}
                         </ol>
                         <p>Add next Schedule</p>
@@ -209,30 +296,17 @@ class Teacher extends Component {
                                 <tr>
                                     <th>From</th>
                                     <th>Title</th>
-                                    <th>Content</th>
+                                    <th>Message</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Nguyen Hoang Nam</td>
-                                    <td>243yfd</td>
-                                    <td>tdbhduuj</td>
-                                </tr>
-                                <tr>
-                                    <td>Nguyen Hoang Nam</td>
-                                    <td>243yfd</td>
-                                    <td>tdbhduuj</td>
-                                </tr>
-                                <tr>
-                                    <td>Nguyen Hoang Nam</td>
-                                    <td>243yfd</td>
-                                    <td>tdbhduuj</td>
-                                </tr>
-                                <tr>
-                                    <td>Nguyen Hoang Nam</td>
-                                    <td>243yfd</td>
-                                    <td>tdbhduuj</td>
-                                </tr>
+                                {this.state.feedback.map((feedback, index) => (
+                                    <tr key={index}>
+                                        <td>{feedback.fields.Students}</td>
+                                        <td>{feedback.fields.Title}</td>
+                                        <td>{feedback.fields.Message}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
