@@ -5,7 +5,24 @@ import './teacher.css';
 class Teacher extends Component {
     constructor(props) {
         super(props);
-    }
+        this.state = {
+          name:[],
+          math:[],
+          physics:[],
+          chemist:[],
+          progress:[],
+          parents:[],
+          teacher:[],
+        }
+      }
+      componentDidMount = () => {
+        let token = localStorage.getItem("token");
+        if(!token){
+            localStorage.setItem("token","patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed");
+            token = localStorage.getItem("token");
+        }
+        console.log(token);
+      }
     render() {
         return (
             <div className="container py-4">
