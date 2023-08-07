@@ -1,0 +1,26 @@
+[
+    {
+      "gender": "student",
+      "username": "van",
+      "password": "12",
+      "name": "khong van ",
+      "point": "10",
+      "subject": "van"
+    },
+    {
+      "gender": "teacher",
+      "username": "hau",
+      "password": "12",
+      "name": "dang hau ",
+      "point": "giao vien",
+      "subject": "toan"
+    },
+    {
+      "gender": "teacher",
+      "username": "mieu",
+      "password": "12",
+      "name": "thúy miều ",
+      "point": "giao vien",
+      "subject": "toán"
+    }
+  ]
