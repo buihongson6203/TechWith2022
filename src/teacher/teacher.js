@@ -9,7 +9,13 @@ class Teacher extends Component {
             students: [],
             revclass: [],
             feedback: [],
+            inputname: '',
+            inputmath: '',
+            physicmark: '',
+            chemistrymark: '',
+            progress: '',
         }
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
     componentDidMount = () => {
         let token = localStorage.getItem("token");
@@ -65,12 +71,13 @@ class Teacher extends Component {
                 this.setState({ loading: false });
             })
     }
-    // componentDidUpdate = (prevProps, prevState) => {
-    //     console.log('previous state');
-    //     console.log(prevState);
-    //     console.log('next state');
-    //     console.log(this.state);
-    // }
+    componentDidUpdate = (prevProps, prevState) => {
+        console.log('previous state');
+        console.log(prevState);
+        console.log('next state');
+        console.log(this.state);
+        console.log(this.state);
+    }
 
 
     //ADD STUDENT
@@ -140,6 +147,12 @@ class Teacher extends Component {
         document.getElementById("progressInput").value = "";
     };
 
+    handleInputChange = (e) => {
+        this.setState({
+            inputname: e.target.value,
+          });
+    };
+
     render() {
         return (
             <div className="container py-4">
@@ -187,19 +200,20 @@ class Teacher extends Component {
                         </table>
                         <div className="row">
                             <div className="col-2">
-                                <input id="nameInput" className="form-control" type="text" placeholder="Name" />
+                                <input id="nameInput" className="form-control" type="text" placeholder="Name" value={this.state.inputname}
+                                onChange={this.handleInputChange} />
                             </div>
                             <div className="col-2">
-                                <input id="mathInput" className="form-control" type="number" placeholder="Mark" />
+                                <input id="mathInput" className="form-control" type="number" placeholder="Mark" value={this.state.inputmath} />
                             </div>
                             <div className="col-2">
-                                <input id="physicInput" className="form-control" type="number" placeholder="Mark" />
+                                <input id="physicInput" className="form-control" type="number" placeholder="Mark" value={this.state.physicmark} />
                             </div>
                             <div className="col-2">
-                                <input id="chemistryInput" className="form-control" type="number" placeholder="Mark" />
+                                <input id="chemistryInput" className="form-control" type="number" placeholder="Mark" value={this.state.chemistrymark} />
                             </div>
                             <div className="col-2">
-                                <input id="progressInput" className="form-control" type="number" placeholder="Progress" />
+                                <input id="progressInput" className="form-control" type="number" placeholder="Progress" value={this.state.inputprogress} />
                             </div>
                             <div className="col-2">
                                 <button className="btn btn-warning text-white" onClick={this.handleAddStudent}>
