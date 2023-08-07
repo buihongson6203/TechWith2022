@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import logo from './logo.svg';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-// import $ from 'jquery';
-import Teacher from './teacher/teacher';
-
-function App() {
-  return (
-    <div className="App">
-      <Teacher />
-    </div>
-=======
 import logo from "./logo.svg";
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,7 +9,7 @@ import {
   , Link
 } from "react-router-dom";
 import Login from "./Login";
-import Parent from "./Parents";
+import Teacher from "./teacher/teacher";
 import Parents from "./Parents";
 
 function App() {
@@ -38,6 +25,12 @@ function App() {
             <Route path="/login" element={<Login />} />{" "}
             {/* Add a route for the Login component */}
           </Routes>
+          <Link to="/teacher/teacher">
+            <button>Teacher</button>
+          </Link>
+          <Routes>
+            <Route path="/teacher/teacher" element={<Teacher />} />{" "}
+          </Routes>
           <Link to="/Parents">
             <button>parent</button>
           </Link>
@@ -52,7 +45,6 @@ function App() {
         <Footer />
       </div>
     </Router>
->>>>>>> master
   );
 }
 
