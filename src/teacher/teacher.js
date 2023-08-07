@@ -91,81 +91,61 @@ class Teacher extends Component {
         // const chemistry = parseInt(document.getElementById("chemistryInput").value);
         // const progress = parseInt(document.getElementById("progressInput").value);
 
-        this.setState((prevState) => ({
+        this.setState(prevState => ({
             formStudent: {
                 ...prevState.formStudent,
                 error: '',
             }
-        }));
+        }), () => {
+            const name = this.state.formStudent.name;
+            const math = parseInt(this.state.formStudent.math);
+            const physic = parseInt(this.state.formStudent.physicmark);
+            const chemistry = parseInt(this.state.formStudent.chemistrymark);
+            const progress = parseInt(this.state.formStudent.progress);
 
-        const name = this.state.formStudent.name;
-        const math = parseInt(this.state.formStudent.math);
-        const physic = parseInt(this.state.formStudent.physicmark);
-        const chemistry = parseInt(this.state.formStudent.chemistrymark);
-        const progress = parseInt(this.state.formStudent.progress);
-        if (isNaN(math) || isNaN(physic) || isNaN(chemistry) || isNaN(progress)) {
-            this.setState((prevState) => ({
+            // Kiểm tra và cập nhật thông báo lỗi mới
+            let newError = '';
+
+            if (isNaN(math) || isNaN(physic) || isNaN(chemistry) || isNaN(progress)) {
+                newError = 'Please enter all fields';
+            } else if (name.length < 3 || name.length > 50) {
+                newError = 'Name must be between 3 and 50 characters';
+            } else if (math < 0 || math > 10) {
+                newError = 'Math must be between 0 and 10';
+            } else if (physic < 0 || physic > 10) {
+                newError = 'Physic must be between 0 and 10';
+            } else if (chemistry < 0 || chemistry > 10) {
+                newError = 'Chemistry must be between 0 and 10';
+            } else if (progress < 0 || progress > 100) {
+                newError = 'Progress must be between 0 and 100';
+            }
+
+            this.setState(prevState => ({
                 formStudent: {
                     ...prevState.formStudent,
-                    error: 'Please enter all fields',
-                }
-            }));
-            return;
-        }
-        if (name.length < 3 || name.length > 50) {
-            this.setState((prevState) => ({
-                formStudent: {
-                    ...prevState.formStudent,
-                    error: 'Name must be between 3 and 50 characters'
-                }
-            }));
-        } else if (math < 0 || math > 10) {
-            this.setState((prevState) => ({
-                formStudent: {
-                    ...prevState.formStudent,
-                    error: 'Math must be between 0 and 10'
-                }
-            }));
-        } else if (physic < 0 || physic > 10) {
-            this.setState((prevState) => ({
-                formStudent: {
-                    ...prevState.formStudent,
-                    error: 'Physic must be between 0 and 10'
-                }
-            }));
-        } else if (chemistry < 0 || chemistry > 10) {
-            this.setState((prevState) => ({
-                formStudent: {
-                    ...prevState.formStudent,
-                    error: 'Chemistry must be between 0 and 10'
-                }
-            }));
-        } else if (progress < 0 || progress > 100) {
-            this.setState((prevState) => ({
-                formStudent: {
-                    ...prevState.formStudent,
-                    error: 'Progress must be between 0 and 10'
-                }
-            }));
-        }
-        if (this.state.formStudent.error.length === 0) {
-            fetch('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
+                    error: newError,
                 },
-                body: JSON.stringify({
-                    fields: {
-                        Name: name,
-                        math: math,
-                        physic: physic,
-                        chemistry: chemistry,
-                        progress: progress,
-                        teacher: 'Ngô Vĩnh Toàn'
-                    }
+            }));
+
+            // Gọi API và xóa form
+            if (newError === '') {
+                fetch('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
+                    },
+                    body: JSON.stringify({
+                        fields: {
+                            Name: name,
+                            math: math,
+                            physic: physic,
+                            chemistry: chemistry,
+                            progress: progress,
+                            teacher: 'Ngô Vĩnh Toàn'
+                        }
+                    })
                 })
-            })
                 .then(response => response.json())
                 .then(data => {
                     this.setState(prevState => ({
@@ -176,7 +156,8 @@ class Teacher extends Component {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        }
+            }
+        });
     };
 
     //DELETE STUDENTS
@@ -323,8 +304,8 @@ class Teacher extends Component {
                                     >{student.fields.progress}%</div>
                                 </div>
                                 <div className="mt-2 d-flex align-items-center justify-content-between">
-                                    <button className="btn btn-primary"><i class="fa-solid fa-chevron-left"></i></button>
-                                    <button className="btn btn-primary"><i class="fa-solid fa-chevron-right"></i></button>
+                                    <button className="btn btn-primary"><i className="fa-solid fa-chevron-left"></i></button>
+                                    <button className="btn btn-primary"><i className="fa-solid fa-chevron-right"></i></button>
                                 </div>
                             </div>
                         ))}
@@ -345,8 +326,9 @@ class Teacher extends Component {
                             ))}
                         </ol>
                         <p>Add next Schedule</p>
-                        <input className="form-control" type="date" />
-                        <input className="mt-2 form-control" type="time" />
+                        <input className="mt-2 form-control" placeholder="Student name" name="name" />
+                        <input className="mt-2 form-control" type="date" name="date" />
+                        <input className="mt-2 form-control" type="time" name="time" />
                         <button className="ms-auto my-1 btn btn-warning">Add schedule</button>
                     </div>
                     <div className="col-6 mt-4">
@@ -422,7 +404,7 @@ class Teacher extends Component {
                         </div>
                     </div>
                     <div className="col-6 mt-4">
-                        <img src="./students.jpg" alt="image" />
+                        <img src="../students.jpg" alt="image" />
                     </div>
                 </div>
             </div>
