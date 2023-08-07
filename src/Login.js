@@ -120,7 +120,7 @@ function Login() {
             checked={gender === "student"}
             onChange={onChangeGender}
           />
-          Nam
+          student
           <input
             name="gender"
             type="radio"
@@ -128,7 +128,7 @@ function Login() {
             checked={gender === "teacher"}
             onChange={onChangeGender}
           />
-          Nữ
+          teacher
         </div>
         <div class="forgot-password">Forgot password?</div>
         <a>
