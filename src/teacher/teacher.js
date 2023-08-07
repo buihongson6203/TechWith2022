@@ -146,16 +146,16 @@ class Teacher extends Component {
                         }
                     })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    this.setState(prevState => ({
-                        students: [...prevState.students, data]
-                    }));
-                    this.clearForm();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        this.setState(prevState => ({
+                            students: [...prevState.students, data]
+                        }));
+                        this.clearForm();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             }
         });
     };
@@ -251,7 +251,7 @@ class Teacher extends Component {
                                         <td>{students.fields.physic}</td>
                                         <td>{students.fields.chemistry}</td>
                                         <td>
-                                            <button className="btn btn-primary">
+                                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentEditModal">
                                                 <i className="fa-solid fa-square-pen"></i>
                                             </button>
                                         </td>
@@ -405,6 +405,32 @@ class Teacher extends Component {
                     </div>
                     <div className="col-6 mt-4">
                         <img src="../students.jpg" alt="image" />
+                    </div>
+                </div>
+                <div class="modal fade" id="studentEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Student editing</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label className="mb-1">Name</label>
+                                <input className="form-control" type="text" name="name" placeholder="Student name" />
+                                <label className="mb-1 mt-2">Math</label>
+                                <input className="form-control" type="number" min={0} max={10} name="math" placeholder="Student math mark" />
+                                <label className="mb-1 mt-2">Physic</label>
+                                <input className="form-control" type="number" min={0} max={10} name="physic" placeholder="Student physic mark" />
+                                <label className="mb-1 mt-2">Chemist</label>
+                                <input className="form-control" type="number" min={0} max={10} name="chemist" placeholder="Student chemist mark" />
+                                <label className="mb-1 mt-2">Progress</label>
+                                <input className="form-control" type="number" min={0} max={100} name="progress" placeholder="Student progress" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
