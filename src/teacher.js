@@ -1,9 +1,8 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import usersData from "./user.json";
 
-class student extends React.Component {
+class teacher extends React.Component {
   constructor(props) {
     super(props);
     const user = JSON.parse(sessionStorage.getItem("user"));
@@ -24,4 +23,4 @@ class student extends React.Component {
   }
 }
 
-export default student;
+export default teacher;
