@@ -9,13 +9,16 @@ class Teacher extends Component {
             students: [],
             revclass: [],
             feedback: [],
-            inputname: '',
-            inputmath: '',
-            physicmark: '',
-            chemistrymark: '',
-            progress: '',
+            formStudent: {
+                error: '',
+                name: '',
+                math: '',
+                physicmark: '',
+                chemistrymark: '',
+                progress: ''
+            }
         }
-        this.handleInputChange = this.handleInputChange.bind(this);
+        // this.handleInputChange = this.handleInputChange.bind(this);
     }
     componentDidMount = () => {
         let token = localStorage.getItem("token");
@@ -72,48 +75,108 @@ class Teacher extends Component {
             })
     }
     componentDidUpdate = (prevProps, prevState) => {
-        console.log('previous state');
-        console.log(prevState);
-        console.log('next state');
-        console.log(this.state);
-        console.log(this.state);
+        // console.log('previous state');
+        // console.log(prevState);
+        // console.log('next state');
+        // console.log(this.state.formStudent);
+        // console.log(this.state);
     }
 
 
     //ADD STUDENT
     handleAddStudent = () => {
-        const name = document.getElementById("nameInput").value;
-        const math = parseInt(document.getElementById("mathInput").value);
-        const physic = parseInt(document.getElementById("physicInput").value);
-        const chemistry = parseInt(document.getElementById("chemistryInput").value);
-        const progress = parseInt(document.getElementById("progressInput").value);
-        fetch('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
-            },
-            body: JSON.stringify({
-                fields: {
-                    Name: name,
-                    math: math,
-                    physic: physic,
-                    chemistry: chemistry,
-                    progress: progress,
-                    teacher: 'Ngô Vĩnh Toàn'
+        // const name = document.getElementById("nameInput").value;
+        // const math = parseInt(document.getElementById("mathInput").value);
+        // const physic = parseInt(document.getElementById("physicInput").value);
+        // const chemistry = parseInt(document.getElementById("chemistryInput").value);
+        // const progress = parseInt(document.getElementById("progressInput").value);
+
+        this.setState((prevState) => ({
+            formStudent: {
+                ...prevState.formStudent,
+                error: '',
+            }
+        }));
+
+        const name = this.state.formStudent.name;
+        const math = parseInt(this.state.formStudent.math);
+        const physic = parseInt(this.state.formStudent.physicmark);
+        const chemistry = parseInt(this.state.formStudent.chemistrymark);
+        const progress = parseInt(this.state.formStudent.progress);
+        if (isNaN(math) || isNaN(physic) || isNaN(chemistry) || isNaN(progress)) {
+            this.setState((prevState) => ({
+                formStudent: {
+                    ...prevState.formStudent,
+                    error: 'Please enter all fields',
                 }
+            }));
+            return;
+        }
+        if (name.length < 3 || name.length > 50) {
+            this.setState((prevState) => ({
+                formStudent: {
+                    ...prevState.formStudent,
+                    error: 'Name must be between 3 and 50 characters'
+                }
+            }));
+        } else if (math < 0 || math > 10) {
+            this.setState((prevState) => ({
+                formStudent: {
+                    ...prevState.formStudent,
+                    error: 'Math must be between 0 and 10'
+                }
+            }));
+        } else if (physic < 0 || physic > 10) {
+            this.setState((prevState) => ({
+                formStudent: {
+                    ...prevState.formStudent,
+                    error: 'Physic must be between 0 and 10'
+                }
+            }));
+        } else if (chemistry < 0 || chemistry > 10) {
+            this.setState((prevState) => ({
+                formStudent: {
+                    ...prevState.formStudent,
+                    error: 'Chemistry must be between 0 and 10'
+                }
+            }));
+        } else if (progress < 0 || progress > 100) {
+            this.setState((prevState) => ({
+                formStudent: {
+                    ...prevState.formStudent,
+                    error: 'Progress must be between 0 and 10'
+                }
+            }));
+        }
+        if (this.state.formStudent.error.length === 0) {
+            fetch('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
+                },
+                body: JSON.stringify({
+                    fields: {
+                        Name: name,
+                        math: math,
+                        physic: physic,
+                        chemistry: chemistry,
+                        progress: progress,
+                        teacher: 'Ngô Vĩnh Toàn'
+                    }
+                })
             })
-        })
-            .then(response => response.json())
-            .then(data => {
-                this.setState(prevState => ({
-                    students: [...prevState.students, data]
-                }));
-                this.clearForm();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    this.setState(prevState => ({
+                        students: [...prevState.students, data]
+                    }));
+                    this.clearForm();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     };
 
     //DELETE STUDENTS
@@ -140,18 +203,40 @@ class Teacher extends Component {
 
     //CLEAR FORM AFTER ADD STUDENT
     clearForm = () => {
-        document.getElementById("nameInput").value = "";
-        document.getElementById("mathInput").value = "";
-        document.getElementById("physicInput").value = "";
-        document.getElementById("chemistryInput").value = "";
-        document.getElementById("progressInput").value = "";
+        // document.getElementById("nameInput").value = "";
+        // document.getElementById("mathInput").value = "";
+        // document.getElementById("physicInput").value = "";
+        // document.getElementById("chemistryInput").value = "";
+        // document.getElementById("progressInput").value = "";
+        this.setState(prevState => ({
+            formStudent: {
+                ...prevState.formStudent,
+                error: '',
+                name: '',
+                math: '',
+                physicmark: '',
+                chemistrymark: '',
+                progress: ''
+            }
+        }));
     };
 
-    handleInputChange = (e) => {
-        this.setState({
-            inputname: e.target.value,
-          });
+    // handleInputChange = (e) => {
+    //     this.setState({
+    //         inputname: e.target.value,
+    //       });
+    // };
+
+    handleInputChange = (event) => {
+        const { name, value } = event.target;
+        this.setState((prevState) => ({
+            formStudent: {
+                ...prevState.formStudent,
+                [name]: value
+            }
+        }));
     };
+
 
     render() {
         return (
@@ -200,20 +285,19 @@ class Teacher extends Component {
                         </table>
                         <div className="row">
                             <div className="col-2">
-                                <input id="nameInput" className="form-control" type="text" placeholder="Name" value={this.state.inputname}
-                                onChange={this.handleInputChange} />
+                                <input id="nameInput" className="form-control" type="text" name="name" placeholder="Name" value={this.state.formStudent.name} onChange={this.handleInputChange} />
                             </div>
                             <div className="col-2">
-                                <input id="mathInput" className="form-control" type="number" placeholder="Mark" value={this.state.inputmath} />
+                                <input id="mathInput" className="form-control" type="number" name="math" placeholder="Mark" value={this.state.formStudent.math} onChange={this.handleInputChange} />
                             </div>
                             <div className="col-2">
-                                <input id="physicInput" className="form-control" type="number" placeholder="Mark" value={this.state.physicmark} />
+                                <input id="physicInput" className="form-control" type="number" name="physicmark" placeholder="Mark" value={this.state.formStudent.physicmark} onChange={this.handleInputChange} />
                             </div>
                             <div className="col-2">
-                                <input id="chemistryInput" className="form-control" type="number" placeholder="Mark" value={this.state.chemistrymark} />
+                                <input id="chemistryInput" className="form-control" type="number" name="chemistrymark" placeholder="Mark" value={this.state.formStudent.chemistrymark} onChange={this.handleInputChange} />
                             </div>
                             <div className="col-2">
-                                <input id="progressInput" className="form-control" type="number" placeholder="Progress" value={this.state.inputprogress} />
+                                <input id="progressInput" className="form-control" type="number" name="progress" placeholder="Progress" value={this.state.formStudent.progress} onChange={this.handleInputChange} />
                             </div>
                             <div className="col-2">
                                 <button className="btn btn-warning text-white" onClick={this.handleAddStudent}>
@@ -221,6 +305,7 @@ class Teacher extends Component {
                                 </button>
                             </div>
                         </div>
+                        <p className="mt-2 text-danger">{this.state.formStudent.error}</p>
                     </div>
                     <div className="col-6">
                         <h4 className="">Academic Progress</h4>
@@ -236,6 +321,10 @@ class Teacher extends Component {
                                         aria-valuemin="0"
                                         aria-valuemax="100"
                                     >{student.fields.progress}%</div>
+                                </div>
+                                <div className="mt-2 d-flex align-items-center justify-content-between">
+                                    <button className="btn btn-primary"><i class="fa-solid fa-chevron-left"></i></button>
+                                    <button className="btn btn-primary"><i class="fa-solid fa-chevron-right"></i></button>
                                 </div>
                             </div>
                         ))}
