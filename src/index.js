@@ -1,3 +1,8 @@
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import CSS của Bootstrap
+import 'bootstrap/dist/js/bootstrap.min.js';   // Import JavaScript của Bootstrap
+import 'popper.js/dist/umd/popper.min.js';     // Import Popper
+
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
