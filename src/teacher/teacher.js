@@ -16,9 +16,14 @@ class Teacher extends Component {
                 physicmark: '',
                 chemistrymark: '',
                 progress: ''
-            }
+            },
+            formSchedule: {
+                error: '',
+                name: '',
+                date: '',
+                time: '',
+            },
         }
-        // this.handleInputChange = this.handleInputChange.bind(this);
     }
     componentDidMount = () => {
         let token = localStorage.getItem("token");
@@ -75,22 +80,11 @@ class Teacher extends Component {
             })
     }
     componentDidUpdate = (prevProps, prevState) => {
-        // console.log('previous state');
-        // console.log(prevState);
-        // console.log('next state');
-        // console.log(this.state.formStudent);
-        // console.log(this.state);
     }
 
 
     //ADD STUDENT
     handleAddStudent = () => {
-        // const name = document.getElementById("nameInput").value;
-        // const math = parseInt(document.getElementById("mathInput").value);
-        // const physic = parseInt(document.getElementById("physicInput").value);
-        // const chemistry = parseInt(document.getElementById("chemistryInput").value);
-        // const progress = parseInt(document.getElementById("progressInput").value);
-
         this.setState(prevState => ({
             formStudent: {
                 ...prevState.formStudent,
@@ -184,11 +178,6 @@ class Teacher extends Component {
 
     //CLEAR FORM AFTER ADD STUDENT
     clearForm = () => {
-        // document.getElementById("nameInput").value = "";
-        // document.getElementById("mathInput").value = "";
-        // document.getElementById("physicInput").value = "";
-        // document.getElementById("chemistryInput").value = "";
-        // document.getElementById("progressInput").value = "";
         this.setState(prevState => ({
             formStudent: {
                 ...prevState.formStudent,
@@ -198,15 +187,16 @@ class Teacher extends Component {
                 physicmark: '',
                 chemistrymark: '',
                 progress: ''
+            },
+            formSchedule: {
+                ...prevState.formSchedule,
+                error: '',
+                name: '',
+                date: '',
+                time: '',
             }
         }));
     };
-
-    // handleInputChange = (e) => {
-    //     this.setState({
-    //         inputname: e.target.value,
-    //       });
-    // };
 
     handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -214,8 +204,55 @@ class Teacher extends Component {
             formStudent: {
                 ...prevState.formStudent,
                 [name]: value
+            },
+            formSchedule: {
+                ...prevState.formSchedule,
+                [name]: value
             }
         }));
+    };
+
+    handleAddSchedule = () => {
+        this.setState(prevState => ({
+            formSchedule: {
+                ...prevState.formSchedule,
+                error: '',
+            }
+        }), () => {
+            const name = this.state.formSchedule.name;
+            const date = this.state.formSchedule.date;
+            const time = this.state.formSchedule.time;
+
+
+            this.setState(prevState => ({
+                formSchedule: {
+                    ...prevState.formSchedule,
+                },
+            }));
+            fetch('https://api.airtable.com/v0/appD5oPrzkMPYUqRq/Review%20Class', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer patEJuKmcrcNSUMxY.edb1fa453d2e06be7f002e6205f1296e110108008866a7af0ff6f4430a0b08ed'
+                },
+                body: JSON.stringify({
+                    fields: {
+                        Name: name,
+                        Schedule: `${date} ${time}`,
+                    }
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.setState(prevState => ({
+                        revclass: [...prevState.revclass, data]
+                    }));
+                    this.clearForm();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
     };
 
 
@@ -315,7 +352,10 @@ class Teacher extends Component {
                         <p>Student list:</p>
                         <ol>
                             {this.state.revclass.map((revclass, index) => (
-                                <li key={index}>{revclass.fields.Name}</li>
+                                <div key={index}>
+                                    <li >{revclass.fields.Name}</li>
+                                </div>
+
                             ))}
                         </ol>
 
@@ -326,10 +366,10 @@ class Teacher extends Component {
                             ))}
                         </ol>
                         <p>Add next Schedule</p>
-                        <input className="mt-2 form-control" placeholder="Student name" name="name" />
-                        <input className="mt-2 form-control" type="date" name="date" />
-                        <input className="mt-2 form-control" type="time" name="time" />
-                        <button className="ms-auto my-1 btn btn-warning">Add schedule</button>
+                        <input className="mt-2 form-control" placeholder="Student name" name="name" value={this.state.formSchedule.name} onChange={this.handleInputChange} />
+                        <input className="mt-2 form-control" type="date" name="date" value={this.state.formSchedule.date} onChange={this.handleInputChange} />
+                        <input className="mt-2 form-control" type="time" name="time" value={this.state.formSchedule.time} onChange={this.handleInputChange} />
+                        <button className="ms-auto my-1 btn btn-warning" onClick={this.handleAddSchedule}>Add schedule</button>
                     </div>
                     <div className="col-6 mt-4">
                         <h4>Your Resource</h4>
@@ -437,5 +477,4 @@ class Teacher extends Component {
         )
     }
 }
-
 export default Teacher;
